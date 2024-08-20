@@ -1,22 +1,19 @@
 import { contextBridge, ipcRenderer } from "electron";
 import { caesarCipher, vigenereCipher } from "./crypto-methods";
 
-export interface CryptoAPI {
-  caesarCipher: (text: string, shift: number, decrypt?: boolean) => string;
-  vigenereCipher: (text: string, key: string, decrypt?: boolean) => string;
-  openFile: () => Promise<string>;
-  saveFile: (content: string) => Promise<string>;
-}
-
-const cryptoAPI: CryptoAPI = {
-  caesarCipher: (text, shift, decrypt) => caesarCipher(text, shift, decrypt),
-  vigenereCipher: (text, key, decrypt = false) =>
+const cryptoAPI = {
+  caesarCipher: (text: string, shift: number, decrypt?: boolean): string =>
+    caesarCipher(text, shift, decrypt),
+  vigenereCipher: (text: string, key: string, decrypt?: boolean): string =>
     vigenereCipher(text, key, decrypt),
-  openFile: () => ipcRenderer.invoke("open-file"),
-  saveFile: (content: string) => ipcRenderer.invoke("save-file", content),
 };
 
+const fileHandler = {
+  openFile: () => ipcRenderer.invoke("dialog:openFile"),
+  saveFile: (content: string) => ipcRenderer.invoke("dialog:saveFile", content),
+};
 contextBridge.exposeInMainWorld("cryptoAPI", cryptoAPI);
+contextBridge.exposeInMainWorld("fileHandler", fileHandler);
 
 // See the Electron documentation for details on how to use preload scripts:
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts

@@ -3,34 +3,186 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
   <title>Криптография</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 20px;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #333;
+    }
+    input[type="text"],
+    input[type="number"] {
+      width: calc(100% - 20px);
+      padding: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      color: #333;
+      background-color: #f9f9f9;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    input[type="text"]:focus,
+    input[type="number"]:focus {
+      border-color: #888;
+    }
+    select {
+      width: calc(100% - 20px);
+      padding: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      color: #333;
+      background-color: #f9f9f9;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    button {
+      background-color: #333;
+      color: #fff;
+      border: none;
+      padding: 8px 15px;
+      margin-right: 5px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #555;
+    }
+    button:active {
+      background-color: #222;
+    }
+    p {
+      margin-top: 20px;
+      font-weight: bold;
+      color: #333;
+    }
+    .result-box {
+      display: inline-block;
+      padding: 5px;
+      background-color: #f0f0f0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      color: #555;
+    }
+  </style>
 </head>
-
 <body>
-  <h1>Криптографические алгоритмы</h1>
-  
-  <div>
-    <h2>Шифр Цезаря</h2>
-    <label for="caesar-input">Введите текст:</label>
-    <input type="text" id="caesar-input">
-    <label for="caesar-shift">Сдвиг:</label>
-    <input type="number" id="caesar-shift" value="3">
-    <button onclick="encryptCaesar()">Зашифровать</button>
-    <button onclick="decryptCaesar()">Дешифровать</button>
-    <p>Результат: <span id="caesar-result"></span></p>
+  <div class="container">
+    <h1>Криптографические алгоритмы</h1>
+
+    <label for="cipher-method">Выберите метод шифрования:</label>
+    <select id="cipher-method" onchange="updateKeyField()">
+      <option value="caesar">Цезарь</option>
+      <option value="vigenere">Виженер</option>
+    </select>
+
+    <label for="text-input">Введите текст:</label>
+    <input type="text" id="text-input" >
+
+    <label for="key-input" id="key-label">Сдвиг:</label>
+    <input type="text" id="key-input" value="3">
+
+    <div>
+      <button onclick="encrypt()">Зашифровать</button>
+      <button onclick="decrypt()">Дешифровать</button>
+      <button onclick="openFile()">Открыть из файла</button>
+      <button onclick="saveFile()">Сохранить в файл</button>
+    </div>
+
+    <p>Результат: <span id="result" class="result-box"></span></p>
   </div>
 
-  <div>
-    <h2>Таблица Виженера</h2>
-    <label for="vigenere-input">Введите текст:</label>
-    <input type="text" id="vigenere-input">
-    <label for="vigenere-key">Ключ:</label>
-    <input type="text" id="vigenere-key">
-    <button onclick="encryptVigenere()">Зашифровать</button>
-    <button onclick="decryptVigenere()">Дешифровать</button>
-    <p>Результат: <span id="vigenere-result"></span></p>
-  </div>
+  <script>
+    function updateKeyField() {
+      const method = document.getElementById('cipher-method').value;
+      const keyInput = document.getElementById('key-input');
+      const keyLabel = document.getElementById('key-label');
 
+      if (method === 'caesar') {
+        keyLabel.innerText = 'Сдвиг:';
+        keyInput.type = 'number';
+        keyInput.value = 3;
+      } else if (method === 'vigenere') {
+        keyLabel.innerText = 'Ключ:';
+        keyInput.type = 'text';
+        keyInput.value = '';
+      }
+    }
+
+    function encrypt() {
+      const method = document.getElementById('cipher-method').value;
+      const text = document.getElementById('text-input').value;
+      const key = document.getElementById('key-input').value;
+
+      if (method === 'caesar') {
+        encryptCaesar(text, parseInt(key));
+      } else if (method === 'vigenere') {
+        encryptVigenere(text, key);
+      }
+    }
+
+    function decrypt() {
+      const method = document.getElementById('cipher-method').value;
+      const text = document.getElementById('text-input').value;
+      const key = document.getElementById('key-input').value;
+
+      if (method === 'caesar') {
+        decryptCaesar(text, parseInt(key));
+      } else if (method === 'vigenere') {
+        decryptVigenere(text, key);
+      }
+    }
+
+    function openFile() {
+      const method = document.getElementById('cipher-method').value;
+
+      if (method === 'caesar') {
+        openCaesarFile();
+      } else if (method === 'vigenere') {
+        openVigenereFile();
+      }
+    }
+
+    function saveFile() {
+      const method = document.getElementById('cipher-method').value;
+
+      if (method === 'caesar') {
+        saveCaesarFile();
+      } else if (method === 'vigenere') {
+        saveVigenereFile();
+      }
+    }
+  </script>
 </body>
 </html>
