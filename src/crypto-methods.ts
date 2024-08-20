@@ -1,5 +1,4 @@
-const SYMBOLS =
-  "абвгдеёжзийклмнопрстуфхцчшщъыьэюя!@#$%^&*()-_=+[]{};:'\",.<>?/|\\~`";
+const SYMBOLS = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
 
 export function caesarCipher(
   text: string,
@@ -7,36 +6,55 @@ export function caesarCipher(
   decrypt = false
 ): string {
   const symbolsLength = SYMBOLS.length;
-  return text
-    .split("")
-    .map((char) => {
-      const index = SYMBOLS.indexOf(char);
-      if (index === -1) return char;
+
+  let result = "";
+
+  for (const symbol of text) {
+    const index = SYMBOLS.indexOf(symbol);
+    if (index === -1) {
+      result += symbol;
+    } else {
       const shiftedIndex = decrypt
         ? (index - shift + symbolsLength) % symbolsLength
         : (index + shift) % symbolsLength;
-      return SYMBOLS[shiftedIndex];
-    })
-    .join("");
+
+      result += SYMBOLS.charAt(shiftedIndex);
+    }
+  }
+
+  return result;
 }
 
 export function vigenereCipher(
-  text: string,
-  key: string,
+  input: string,
+  keyword: string,
   decrypt = false
 ): string {
   const symbolsLength = SYMBOLS.length;
-  const keyLength = key.length;
-  return text
-    .split("")
-    .map((char, i) => {
-      const textIndex = SYMBOLS.indexOf(char);
-      const keyIndex = SYMBOLS.indexOf(key[i % keyLength]);
-      if (textIndex === -1 || keyIndex === -1) return char;
-      const newIndex = decrypt
-        ? (textIndex - keyIndex + symbolsLength) % symbolsLength
-        : (textIndex + keyIndex) % symbolsLength;
-      return SYMBOLS[newIndex];
-    })
-    .join("");
+
+  let result = "";
+  let keywordIndex = 0;
+
+  for (const symbol of input) {
+    const inputIndex = SYMBOLS.indexOf(symbol);
+    const keyIndex = SYMBOLS.indexOf(keyword.charAt(keywordIndex));
+
+    if (inputIndex !== -1 && keyIndex !== -1) {
+      const c = decrypt
+        ? (inputIndex + symbolsLength - keyIndex) % symbolsLength
+        : (inputIndex + keyIndex) % symbolsLength;
+
+      result += SYMBOLS.charAt(c);
+
+      keywordIndex++;
+
+      if (keywordIndex === keyword.length) {
+        keywordIndex = 0;
+      }
+    } else {
+      result += symbol;
+    }
+  }
+
+  return result;
 }
