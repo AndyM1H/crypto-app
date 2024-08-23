@@ -32,7 +32,6 @@ const createWindow = (): void => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   // Open the DevTools.
-  console.log(process.env.ENVIRONMENT);
   if (process.env.ENVIRONMENT !== "PRODUCTION") {
     mainWindow.webContents.openDevTools();
   }

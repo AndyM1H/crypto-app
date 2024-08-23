@@ -39,4 +39,14 @@ describe("Encryption", () => {
       expect(decryptedText).toEqual(expectedDecrypted);
     }
   );
+
+  describe("fail cases", () => {
+    it("should throw an error if method is not supported", () => {
+      const unknownMethod = "not supported" as CIPHER_METHOD;
+
+      expect(() =>
+        EncryptionFactory.createEncryptionMethod(unknownMethod)
+      ).toThrow();
+    });
+  });
 });

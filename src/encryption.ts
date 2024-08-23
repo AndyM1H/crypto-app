@@ -82,7 +82,6 @@ class VigenereCipher implements Encryption {
 
 export class EncryptionFactory {
   public static createEncryptionMethod(method: CIPHER_METHOD): Encryption {
-    console.log("Factory Called; method: ", method);
     switch (method) {
       case SUPPORTED_CIPHERS.CAESAR:
         return new CaesarCipher();
