@@ -139,50 +139,6 @@
         keyInput.value = '';
       }
     }
-
-    function encrypt() {
-      const method = document.getElementById('cipher-method').value;
-      const text = document.getElementById('text-input').value;
-      const key = document.getElementById('key-input').value;
-
-      if (method === 'caesar') {
-        encryptCaesar(text, parseInt(key));
-      } else if (method === 'vigenere') {
-        encryptVigenere(text, key);
-      }
-    }
-
-    function decrypt() {
-      const method = document.getElementById('cipher-method').value;
-      const text = document.getElementById('text-input').value;
-      const key = document.getElementById('key-input').value;
-
-      if (method === 'caesar') {
-        decryptCaesar(text, parseInt(key));
-      } else if (method === 'vigenere') {
-        decryptVigenere(text, key);
-      }
-    }
-
-    function openFile() {
-      const method = document.getElementById('cipher-method').value;
-
-      if (method === 'caesar') {
-        openCaesarFile();
-      } else if (method === 'vigenere') {
-        openVigenereFile();
-      }
-    }
-
-    function saveFile() {
-      const method = document.getElementById('cipher-method').value;
-
-      if (method === 'caesar') {
-        saveCaesarFile();
-      } else if (method === 'vigenere') {
-        saveVigenereFile();
-      }
-    }
   </script>
 </body>
 </html>
