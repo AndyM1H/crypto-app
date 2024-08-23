@@ -1,13 +1,17 @@
 import { contextBridge, ipcRenderer } from "electron";
-import { caesarCipher, vigenereCipher } from "./crypto-methods";
+import { CIPHER_METHOD } from "./constants";
+import { EncryptionFactory } from "./encryption";
 
 const cryptoAPI = {
-  caesarCipher: (text: string, shift: number, decrypt?: boolean): string =>
-    caesarCipher(text, shift, decrypt),
-  vigenereCipher: (text: string, key: string, decrypt?: boolean): string =>
-    vigenereCipher(text, key, decrypt),
+  encrypt: (method: CIPHER_METHOD, text: string, key: string): string => {
+    const encryption = EncryptionFactory.createEncryptionMethod(method);
+    return encryption.encrypt(text, key);
+  },
+  decrypt: (method: CIPHER_METHOD, text: string, key: string): string => {
+    const encryption = EncryptionFactory.createEncryptionMethod(method);
+    return encryption.decrypt(text, key);
+  },
 };
-
 const fileHandler = {
   openFile: () => ipcRenderer.invoke("dialog:openFile"),
   saveFile: (content: string) => ipcRenderer.invoke("dialog:saveFile", content),
