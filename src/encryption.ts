@@ -4,17 +4,22 @@ import {
   SUPPORTED_SYMBOLS,
 } from "./constants";
 
-export interface Encryption {
-  encrypt(text: string, key: string): string;
-  decrypt(text: string, key: string): string;
+export interface EncryptionParams {
+  text: string;
+  key: string;
+}
+
+interface Encryption {
+  encrypt(params: EncryptionParams): string;
+  decrypt(params: EncryptionParams): string;
 }
 
 class CaesarCipher implements Encryption {
-  public encrypt(text: string, key: string): string {
+  public encrypt({ text, key }: EncryptionParams): string {
     return this.caesarCipher(text, parseInt(key));
   }
 
-  public decrypt(text: string, key: string): string {
+  public decrypt({ text, key }: EncryptionParams): string {
     return this.caesarCipher(text, parseInt(key), true);
   }
 
@@ -41,11 +46,11 @@ class CaesarCipher implements Encryption {
 }
 
 class VigenereCipher implements Encryption {
-  public encrypt(text: string, key: string): string {
+  public encrypt({ text, key }: EncryptionParams): string {
     return this.vigenereCipher(text, key);
   }
 
-  public decrypt(text: string, key: string): string {
+  public decrypt({ text, key }: EncryptionParams): string {
     return this.vigenereCipher(text, key, true);
   }
 
