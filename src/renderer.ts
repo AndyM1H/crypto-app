@@ -1,8 +1,13 @@
+interface EncryptionParams {
+  text: string;
+  key: string;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface Window {
   cryptoAPI: {
-    encrypt: (method: string, text: string, key: string) => string;
-    decrypt: (method: string, text: string, key: string) => string;
+    encrypt: (method: string, { text, key }: EncryptionParams) => string;
+    decrypt: (method: string, { text, key }: EncryptionParams) => string;
   };
   fileHandler: {
     openFile: () => Promise<string>;
@@ -30,7 +35,7 @@ function encrypt() {
   const text = (document.getElementById("text-input") as HTMLInputElement)
     .value;
   const key = (document.getElementById("key-input") as HTMLInputElement).value;
-  const encryptedText = window.cryptoAPI.encrypt(method, text, key);
+  const encryptedText = window.cryptoAPI.encrypt(method, { text, key });
 
   (document.getElementById("result") as HTMLElement).textContent =
     encryptedText;
@@ -43,7 +48,7 @@ function decrypt() {
     .value;
   const key = (document.getElementById("key-input") as HTMLInputElement).value;
 
-  const decryptedText = window.cryptoAPI.decrypt(method, text, key);
+  const decryptedText = window.cryptoAPI.decrypt(method, { text, key });
 
   (document.getElementById("result") as HTMLElement).textContent =
     decryptedText;

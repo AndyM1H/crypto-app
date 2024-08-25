@@ -1,21 +1,23 @@
 import { contextBridge, ipcRenderer } from "electron";
 import { CIPHER_METHOD } from "./constants";
-import { EncryptionFactory } from "./encryption";
+import { EncryptionFactory, EncryptionParams } from "./encryption";
 
 const cryptoAPI = {
-  encrypt: (method: CIPHER_METHOD, text: string, key: string): string => {
+  encrypt: (method: CIPHER_METHOD, { text, key }: EncryptionParams): string => {
     const encryption = EncryptionFactory.createEncryptionMethod(method);
-    return encryption.encrypt(text, key);
+    return encryption.encrypt({ text, key });
   },
-  decrypt: (method: CIPHER_METHOD, text: string, key: string): string => {
+  decrypt: (method: CIPHER_METHOD, { text, key }: EncryptionParams): string => {
     const encryption = EncryptionFactory.createEncryptionMethod(method);
-    return encryption.decrypt(text, key);
+    return encryption.decrypt({ text, key });
   },
 };
+
 const fileHandler = {
   openFile: () => ipcRenderer.invoke("dialog:openFile"),
   saveFile: (content: string) => ipcRenderer.invoke("dialog:saveFile", content),
 };
+
 contextBridge.exposeInMainWorld("cryptoAPI", cryptoAPI);
 contextBridge.exposeInMainWorld("fileHandler", fileHandler);
 

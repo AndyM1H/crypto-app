@@ -32,8 +32,8 @@ describe("Encryption", () => {
     ({ method, text, key, expectedEncrypted, expectedDecrypted }) => {
       const cipher = EncryptionFactory.createEncryptionMethod(method);
 
-      const encryptedText = cipher.encrypt(text, key);
-      const decryptedText = cipher.decrypt(encryptedText, key);
+      const encryptedText = cipher.encrypt({ text, key });
+      const decryptedText = cipher.decrypt({ text: encryptedText, key });
 
       expect(encryptedText).toEqual(expectedEncrypted);
       expect(decryptedText).toEqual(expectedDecrypted);
